@@ -13,7 +13,7 @@
 #define SCREEN_HEIGHT   [UIScreen mainScreen].bounds.size.height //屏幕高度
 #define SCREEN_WIDTH    [UIScreen mainScreen].bounds.size.width //屏幕宽度
 
-#define iPhone_X    SCREEN_HEIGHT == 812.0f && SCREEN_WIDTH == 375.0f ? YES : NO //iPhone X
+#define iPhone_X    SCREEN_HEIGHT == 812.0f && SCREEN_WIDTH == 375.0f  //iPhone X
 
 #define STATEBAR_HEIGHT   (iPhone_X ? 44.0f : 20.0f)    //状态栏高度
 #define NAVBAR_HEIGHT     (STATEBAR_HEIGHT + 44.0f)     //导航栏高度
