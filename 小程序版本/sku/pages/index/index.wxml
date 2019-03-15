@@ -1,0 +1,4 @@
+<!--index.wxml-->
+<text class='button-style' bindtap='buttonClick'>点击选择规格</text>
+
+<specwindow id='specwindow' propsList='{{propsList}}' skuData='{{skuData}}'/>

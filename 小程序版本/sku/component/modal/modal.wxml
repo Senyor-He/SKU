@@ -1,0 +1,7 @@
+<!--component/modal/modal.wxml-->
+<view class="modals modals-bottom-dialog" hidden="{{!isShow}}">
+    <view class="modals-cancel" bindtap="hideModal"></view>
+    <view class="bottom-dialog-body bottom-pos" style="height:{{height}}rpx" animation="{{animationData}}">
+      <slot></slot>
+    </view>
+</view>

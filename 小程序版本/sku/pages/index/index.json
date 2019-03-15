@@ -1,0 +1,5 @@
+{
+  "usingComponents": {
+    "specwindow": "../../../component/specwindow/specwindow"
+  }
+}

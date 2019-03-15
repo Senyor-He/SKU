@@ -1,0 +1,33 @@
+<!--component/specwindow/specwindow.wxml-->
+<modal id='modal' height='900'>
+  <view class='modal-container'>
+    <image class='goods-image' />
+    <image class='close-window-image' src='../../resources/images/icon_window_close.png' bindtap='hideModal' />
+    <view class='price-container'>
+      <view class='price-text'>{{showPrice}}</view>
+      <view class='select-container'>
+        <view class='select-text'>已选:</view>
+        <view class='select-text-value'>{{showSpecText}}</view>
+      </view>
+    </view>
+    <!-- 规格 -->
+    <view class='scroll-container'>
+      <scroll-view scroll-y class='scroll-view'>
+        <block wx:for='{{propsList}}' wx:key='sectionKey' wx:for-index='sectionIndex' wx:for-item='sectionItem'>
+          <view class='prop-title'>{{sectionItem.standardListName}}</view>
+          <view class='prop-value-container'>
+            <block wx:for='{{sectionItem.standardInfoList}}' wx:key='rowKey' wx:for-index='rowIndex' wx:for-item='rowItem'>
+              <view class='{{rowItem.isSelect == 1 ? "prop-value-s" : rowItem.isSelect == 0 ? "prop-value-n" : "prop-value-ns"}}' data-section='{{sectionIndex}}' data-row='{{rowIndex}}' data-item='{{rowItem}}' bindtap='itemClick'>{{rowItem.standardName}}</view>
+            </block>
+          </view>
+        </block>
+      </scroll-view>
+    </view>
+
+    <!-- 提交 -->
+    <view class='submit-button' bindtap='submitAction'>
+      <image src='../../resources/images/icon_submit_image.png' class='submit-bg' />
+      <text class='submit-text'>确认提交</text>
+    </view>
+  </view>
+</modal>
