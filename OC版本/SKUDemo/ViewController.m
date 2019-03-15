@@ -205,7 +205,7 @@
         NSString * attrValueId = @"";
         for (int j = 0; j < standardInfoList.count; j++) {
             NSDictionary * dict = standardInfoList[j];
-            NSString * isSelected = NSString(@"%@", dict[@"isSelected"]);
+            NSString * isSelected = NSString(@"%@", dict[@"isSelect"]);
             NSString * AttrValueId = NSString(@"%@", dict[@"attrValueId"]);
             if ([standardListName isEqualToString:@"成色"]) {
                 NSString * AttrvalueTitle = NSString(@"%@", dict[@"attrvalueTitle"]);
