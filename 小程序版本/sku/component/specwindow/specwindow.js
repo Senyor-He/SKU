@@ -23,10 +23,12 @@ Component({
     showPrice: '', //显示价格
     showSpecText: '', //显示规格
     goodsId: '', //商品id
+    count: 0, //库存数
   },
   ///组件初始化 处理数据
   attached() {
-    var skuData = { ...this.properties.skuData
+    var skuData = {
+      ...this.properties.skuData
     };
     var skuResult = createDateSource(skuData);
     this.setData({
@@ -40,38 +42,43 @@ Component({
    */
   methods: {
     ///显示弹窗
-    showModal: function() {
+    showModal: function () {
       var specwindow = this.selectComponent("#modal");
       specwindow.showModal();
     },
     ///隐藏弹窗
-    hideModal: function() {
+    hideModal: function () {
       var specwindow = this.selectComponent("#modal");
       specwindow.hideModal();
     },
     ///处理初始页面的展示数据 可选 选中 不可选
-    reloadDataSource: function(object) {
+    reloadDataSource: function () {
       var {
         skuResult,
         propsList,
         selectedIdArray,
         selectedValueArray,
-      } = { ...this.data
+        showPrice,
+        count,
+      } = {
+        ...this.data
       };
       var skuKeys = getObjKeys(skuResult);
 
       ///取出sku所有组合的价格 取出最大值和最小值 获得价格区间
       var allPrice = [];
+
       skuKeys.forEach(item => {
         var skuData = skuResult[item];
         var prices = skuData['prices'];
+        count = count + skuData['stocksNumber'];
         allPrice = allPrice.concat(prices);
       });
       ///取出最大值和最小值 这就是初始价格
       var maxPrice = Math.max.apply(Math, allPrice);
       var minPrice = Math.min.apply(Math, allPrice);
 
-      var showPrice = maxPrice == minPrice ? `￥${minPrice}` : `￥${minPrice}~￥${maxPrice}`;
+      showPrice = maxPrice == minPrice ? `￥${minPrice}` : `￥${minPrice}~￥${maxPrice}`;
 
       if (propsList.length == 0) {
         return;
@@ -111,12 +118,13 @@ Component({
         selectedValueArray,
         initialPrice: showPrice,
         showPrice,
+        count,
       });
       this.handDisEnableData();
       this.handSpecifications();
     },
     ///处理不可选的数据
-    handDisEnableData: function() {
+    handDisEnableData: function () {
       var {
         skuResult,
         propsList,
@@ -131,7 +139,6 @@ Component({
         var standardInfoList = item.standardInfoList;
         standardInfoList.forEach(item2 => {
           var attrValueId = item2.attrValueId;
-          var standardName = item2.standardName;
           ///将selectedIdArray赋值给一个临时数组 这个地方需要解构 不然会有问题
           var tempArray = [...selectedIdArray];
           ///从已经选好的组合中 移除当前组之前的id 并插入新的id
@@ -147,7 +154,7 @@ Component({
             }
           }
           ///将处理完的组合排序
-          tempArray.sort(function(value1, value2) {
+          tempArray.sort(function (value1, value2) {
             return parseInt(value1) - parseInt(value2);
           });
           ///排序之后进行拼接
@@ -168,15 +175,17 @@ Component({
         propsList
       });
     },
-    ///计算价格 
-    calculatePrice: function() {
+    ///计算价格 库存 已经获取商品id
+    calculatePrice: function () {
       var {
         skuResult,
         selectedIdArray,
         initialPrice,
         showPrice,
         goodsId,
-      } = { ...this.data
+        count,
+      } = {
+        ...this.data
       };
       var skuKeys = getObjKeys(skuResult);
       var tempArray = [...selectedIdArray];
@@ -191,19 +200,21 @@ Component({
         }
       }
       ///将处理完的组合排序
-      tempArray.sort(function(value1, value2) {
+      tempArray.sort(function (value1, value2) {
         return parseInt(value1) - parseInt(value2);
       });
       ///排序之后进行拼接
       var resultKey = tempArray.join(";");
       var index = skuKeys.indexOf(resultKey);
+      ///重置 在全部取消选中时需要还原
       showPrice = initialPrice;
       goodsId = '';
+      count = 0;
       ///表示匹配到了
       if (index != -1) {
         var skuData = skuResult[resultKey];
         var prices = skuData['prices'];
-        //取出最大值和最小值 这就是初始价格
+        //取出最大值和最小值 
         var maxPrice = Math.max.apply(Math, prices);
         var minPrice = Math.min.apply(Math, prices);
         showPrice = maxPrice == minPrice ? `￥${minPrice}` : `￥${minPrice}~￥${maxPrice}`;
@@ -212,18 +223,21 @@ Component({
           ///当五个属性全部选中时 只会有一个id 所以 取第一个就可以了
           var productIds = skuData['productIds'];
           goodsId = productIds[0];
+          count = skuData['stocksNumber'];
         }
       }
       this.setData({
         showPrice,
         goodsId,
+        count,
       });
     },
     ///处理规格
-    handSpecifications: function() {
+    handSpecifications: function () {
       var {
         selectedValueArray
-      } = { ...this.data
+      } = {
+        ...this.data
       };
       var tempArray = [...selectedValueArray];
       ///移除没有选中的组 即 '' 空字符串
@@ -243,12 +257,13 @@ Component({
     },
 
     //属性点击事件
-    itemClick: function(event) {
+    itemClick: function (event) {
       var {
         propsList,
         selectedIdArray,
         selectedValueArray
-      } = { ...this.data
+      } = {
+        ...this.data
       };
       ///取到当前点击的组
       var sectionIndex = event.target.dataset.section;
@@ -290,13 +305,15 @@ Component({
       this.handSpecifications();
     },
     ///提交
-    submitAction: function() {
+    submitAction: function () {
       var {
-        goodsId
-      } = { ...this.data
+        goodsId,
+        count,
+      } = {
+        ...this.data
       };
       wx.showToast({
-        title: goodsId == '' ? '每一项均为必选' : `匹配到了一件商品，id为:${goodsId}`,
+        title: goodsId == '' ? `每一项均为必选` : `匹配到了一件商品，id为:${goodsId}，库存数:${count}`,
         icon: "none",
       });
     }
