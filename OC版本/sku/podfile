@@ -1,0 +1,5 @@
+platform:ios,'9.0'
+use_frameworks!
+target 'sku' do
+pod 'Masonry', '~> 1.1.0'
+end
