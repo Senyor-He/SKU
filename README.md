@@ -6,10 +6,10 @@
 OC版本预览
 
 
-![image](https://github.com/Monkiki920/SKU/blob/master/oc_sku.gif)
+![image](https://upload-images.jianshu.io/upload_images/12650760-11d418385f25148a.gif)
 
 
 小程序版本预览
 
 
-![image](https://github.com/Monkiki920/SKU/blob/master/js_sku.gif)
+![image](https://upload-images.jianshu.io/upload_images/12650760-e76c188fdbf66b13.gif)
